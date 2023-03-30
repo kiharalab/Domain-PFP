@@ -106,7 +106,7 @@ python3 main.py:
 
 ### Running Example
 ```
-python main.py --protein F1QN13
+python main.py --protein Q6NYN7
 ```
 
 ```
