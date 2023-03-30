@@ -23,9 +23,6 @@ Contact: Daisuke Kihara (dkihara@purdue.edu)
 
 For technical problems or questions, please reach to Nabil Ibtehaz (nibtehaz@purdue.edu).
 
-## Citation:
-
-....
 
 ## Introduction
 Domains are functional and structural units of proteins that govern various biological functions performed by the proteins. Therefore, characterization of domains in a protein can serve as a proper functional representation of proteins. Here, we employ a self-supervised protocol to derive functionally consistent representations for domains, through learning domain-Gene Ontology (GO) co-occurrences and associations. Domain embeddings constructed with the self-supervised protocol learned functional associations, which turned out effective to perform in actual function prediction tasks. An extensive evaluation shows that the protein representation using the domain embeddings are superior to that of large-scale protein language models in GO prediction tasks. Moreover, the new function prediction method, Domain-PFP, significantly outperformed the state-of-the-art function predictors. Notably, Domain-PFP achieved increase of area under precision-recall curve by 2.43%, 14.58% and 9.57% over the state-of-the-art method for molecular function (MF), biological process (BP) and cellular components (CC), respectively. Moreover, Domain-PFP demonstrated competitive performance in CAFA3 evaluation, by achieving overall the best performance among top teams that participated in the assessment.
@@ -120,3 +117,8 @@ python main.py --fasta sample_protein/Q6NYN7.fasta --threshCCO 0.5
 ## Experiments
 
 All the codes to run the experiments are provided in /Experiments directory
+
+
+## Citation:
+
+"Domain-PFP: Protein Function Prediction Using Function-Aware Domain Embedding Representations, Nabil Ibtehaz, Yuki Kagaya, and Daisuke Kihara, In submission (2023)"
