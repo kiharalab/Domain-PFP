@@ -86,6 +86,13 @@ Please download and unzip the data.zip and saved_models.zip files
 
 [https://kiharalab.org/domainpfp/](https://kiharalab.org/domainpfp/)
 
+```
+wget https://kiharalab.org/domainpfp/data.zip
+unzip data.zip
+wget https://kiharalab.org/domainpfp/saved_models.zip
+unzip saved_models.zip
+
+```
 
 ## Usage
 
@@ -103,15 +110,15 @@ python3 main.py:
 
 ### Running Example
 ```
-python main.py --protein Q6NYN7
+python predict_functions.py --protein Q6NYN7
 ```
 
 ```
-python main.py --fasta sample_protein/Q6NYN7.fasta
+python predict_functions.py --fasta sample_protein/Q6NYN7.fasta
 ```
 
 ```
-python main.py --fasta sample_protein/Q6NYN7.fasta --threshCCO 0.5
+python predict_functions.py --fasta sample_protein/Q6NYN7.fasta --threshCCO 0.5
 ```
 
 ## Experiments
