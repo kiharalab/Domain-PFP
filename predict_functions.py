@@ -12,7 +12,6 @@ DOUBLE_PRECISION = 12       # precision for floating point
 
 from domaingo_embedding_model import DomainGOEmbeddingModel, load_domaingo_embedding_model_weights
 from domain_embedding import DomainEmbedding
-from data_processing import compute_domain_go_intersection, compute_domain_go_score
 from download_sequences import download_sequence
 from utils import Ontology
 

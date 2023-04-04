@@ -30,7 +30,16 @@ Domains are functional and structural units of proteins that govern various biol
 
 ## Overall Protocol
 
-![network_architecture](imgs/inference.png)
+![network_architecture](imgs/overview.png)
+
+Overview of Domain-PFP. 
+
+<ol type="a">
+  <li>The network architecture used for self-supervised learning of domain embeddings. </li>
+  <li>The overall pipeline of learning the functionally aware domain embeddings.</li>
+  <li>The steps of computing the embeddings of a protein and inferring the functions.</li>
+</ol>
+
 
 
 ## Pre-required software
@@ -61,6 +70,7 @@ If you encounter any errors, you can install each library one by one:
 !pip3 install pandas==1.5.2
 !pip3 install seaborn==0.12.1
 !pip3 install torch==1.13.0
+!pip3 install tabulate==0.9.0
 !pip3 install scikit-learn==1.2.0
 !pip3 install click==8.0.3
 ```
@@ -96,10 +106,56 @@ unzip saved_models.zip
 
 ## Usage
 
-Use Domain-PFP to predict the functions by either providing the protein ID or path to a fasta file
+
+Here we provide the following functionalities :  
+
+
+
+### 1. calculate domain-GO association probabilities
+
+Use DomainGO_prob to calculate the association probability of a domain and GO term, by providing the domain and GO term
 
 ```
-python3 main.py:
+python3 domaingo_prob.py:
+
+  -domain              input InterPro domain
+  -GO                  input GO term
+```
+
+#### Example
+```
+python domaingo_prob --domain IPR000003 --GO GO:0042925
+
+```
+
+### 2. compute functionally aware protein embedding representation
+
+Use Domain-PFP to compute functionally aware embedding representation of a protein by providing the protein ID or path to a fasta file. You also need to provide the path to the savefile, where the embedding will be saved as a pickle file
+
+```
+python3 compute_embeddings.py:
+
+  -protein              UniProt ID of protein
+  -fasta                Or provide the fasta file path
+  -savefile             Path to save the protein embeddings (as pickle file)
+                        (default: emb.p)  
+```
+
+#### Example
+
+```
+python compute_embeddings.py --protein Q6NYN7 --savefile emb_Q6NYN7.p
+```
+
+***Note: If you wish to use this representation as feature for some functionally relevant downstream task. Please consider applying proper normalization***
+
+
+### 3. predict protein functions using Domain-PFP
+
+Use Domain-PFP to predict the functions by either providing the protein ID or path to a fasta file.
+
+```
+python3 predict_functions.py:
   -protein              UniProt ID of protein
   -fasta                Or provide the fasta file path
   -threshMFO             Threshold for MFO prediction (default: 0.36)
@@ -108,7 +164,8 @@ python3 main.py:
   
 ```
 
-### Running Example
+#### Example
+
 ```
 python predict_functions.py --protein Q6NYN7
 ```
