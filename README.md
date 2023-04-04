@@ -15,7 +15,7 @@
 
 Domain-PFP is a self-supervised method to learn functional representations of protein domains that can be used for protein function prediction.
 
-Copyright (C) ------
+<!-- Copyright (C) -------->
 
 License: GPL v3. (If you are interested in a different license, for example, for commercial use, please contact us.) 
 
@@ -113,7 +113,7 @@ Here we provide the following functionalities :
 
 ### 1. calculate domain-GO association probabilities
 
-Use DomainGO_prob to calculate the association probability of a domain and GO term, by providing the domain and GO term
+You can use DomainGO_prob to calculate the association probability of a domain and GO term, by providing the domain and GO term
 
 ```
 python3 domaingo_prob.py:
@@ -124,13 +124,13 @@ python3 domaingo_prob.py:
 
 #### Example
 ```
-python domaingo_prob --domain IPR000003 --GO GO:0042925
-
+python domaingo_prob --domain IPR000003 --GO GO:0006355
 ```
+<br>
 
 ### 2. compute functionally aware protein embedding representation
 
-Use Domain-PFP to compute functionally aware embedding representation of a protein by providing the protein ID or path to a fasta file. You also need to provide the path to the savefile, where the embedding will be saved as a pickle file
+You can use Domain-PFP to compute functionally aware embedding representation of a protein by providing the protein ID or path to a fasta file. You also need to provide the path to the savefile, where the embedding will be saved as a pickle file
 
 ```
 python3 compute_embeddings.py:
@@ -147,12 +147,13 @@ python3 compute_embeddings.py:
 python compute_embeddings.py --protein Q6NYN7 --savefile emb_Q6NYN7.p
 ```
 
-***Note: If you wish to use this representation as feature for some functionally relevant downstream task. Please consider applying proper normalization***
+***Note: If you wish to use this representation as feature for some functionally relevant downstream task. <br> Please consider applying proper normalization***
 
+<br>
 
 ### 3. predict protein functions using Domain-PFP
 
-Use Domain-PFP to predict the functions by either providing the protein ID or path to a fasta file.
+You can use Domain-PFP to predict the functions by either providing the protein ID or path to a fasta file.
 
 ```
 python3 predict_functions.py:
@@ -177,6 +178,8 @@ python predict_functions.py --fasta sample_protein/Q6NYN7.fasta
 ```
 python predict_functions.py --fasta sample_protein/Q6NYN7.fasta --threshCCO 0.5
 ```
+
+<br>
 
 ## Experiments
 
