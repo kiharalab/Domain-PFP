@@ -1,4 +1,4 @@
-from optparse import OptionParser
+from argparse import ArgumentParser
 from datetime import datetime
 import pickle
 import sys, os
@@ -13,13 +13,13 @@ from domaingo_embedding_model import DomainGOEmbeddingModel, load_domaingo_embed
 from domain_embedding import DomainEmbedding
 from download_sequences import download_sequence
 
-parser = OptionParser(add_help_option=False)
+parser = ArgumentParser()
 
-parser.add_option('--protein',  help=  'Uniprot ID of protein')
-parser.add_option('--fasta',  help='Fasta file of protein sequence')
-parser.add_option('--savefile', default='emb.p', help='Path to save the protein embeddings (as pickle file)')
+parser.add_argument('--protein',  help='Uniprot ID of protein', type=str)
+parser.add_argument('--fasta',  help='Fasta file of protein sequence', type=str)
+parser.add_argument('--savefile', default='emb.p', help='Path to save the protein embeddings (as pickle file)', type=str, required=True )
 
-(options, args) = parser.parse_args()
+args = parser.parse_args()
 
 
 def parse_domains(tsv_file_pth):
@@ -118,14 +118,14 @@ def main():
     fasta = ''
     savefile = ''
     
-    if options.protein:
-        protein = options.protein
+    if args.protein:
+        protein = args.protein
 
-    if options.fasta:
-        fasta = options.fasta
+    if args.fasta:
+        fasta = args.fasta
         
-    if options.savefile:
-        savefile = options.savefile
+    if args.savefile:
+        savefile = args.savefile
 
 
     if len(protein)>0:
@@ -139,22 +139,19 @@ def main():
 
     elif len(fasta)>0:
         print(f'Loading the fasta file {fasta}')
-        if(not os.path.isfile(fasta)):
-            print(f'{fasta} file not found')
-            sys.exit()
+        if(not os.path.isfile(fasta)):            
+            sys.exit(f'{fasta} file not found')
 
-    else:
-        print('Please input a protein UniProt ID or path to a fasta file')
-        sys.exit()
+    else:        
+        sys.exit('Please input a protein UniProt ID or path to a fasta file')
 
-    if len(savefile)==0:
-        print('Please input a path to save the protein embeddings')
-        sys.exit()
+    if len(savefile)==0:        
+        sys.exit('Please input a path to save the protein embeddings')
 
     try:
-        os.makedirs('temp_data')
-    except:
-        pass
+        os.makedirs('temp_data',exist_ok=True)
+    except Exception as e:
+        print(e)
     
     
     job_id = datetime.now().strftime("%H%M%S%f")

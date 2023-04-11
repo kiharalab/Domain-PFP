@@ -1,4 +1,4 @@
-from optparse import OptionParser
+from argparse import ArgumentParser
 from datetime import datetime
 import pickle
 import sys, os
@@ -15,15 +15,15 @@ from domain_embedding import DomainEmbedding
 from download_sequences import download_sequence
 from utils import Ontology
 
-parser = OptionParser(add_help_option=False)
+parser = ArgumentParser()
+parser.add_argument('--protein',  help='Uniprot ID of protein', type=str)
+parser.add_argument('--fasta',  help='Fasta file of protein sequence', type=str)
+parser.add_argument('--threshMFO', help='Threshold value for MF prediction', default=.36, type=float)
+parser.add_argument('--threshBPO', help='Threshold value for BP prediction', default=.31, type=float)
+parser.add_argument('--threshCCO', help='Threshold value for CC prediction', default=.36, type=float)
+parser.add_argument('--outfile',  help='Path to the output csv file (optional)', type=str)
 
-parser.add_option('--protein',  help=  'Uniprot ID of protein')
-parser.add_option('--fasta',  help='Fasta file of protein sequence')
-parser.add_option('--threshMFO', type='float', default=.36, help='Threshold value for MFO prediction')
-parser.add_option('--threshBPO', type='float', default=.31, help='Threshold value for BPO prediction')
-parser.add_option('--threshCCO', type='float', default=.36, help='Threshold value for CCO prediction')
-
-(options, args) = parser.parse_args()
+args = parser.parse_args()
 
 
 def parse_domains(tsv_file_pth):
@@ -185,20 +185,20 @@ def main():
 
     onto_tree = Ontology(f'data/go.obo', with_rels=False) 
     
-    if options.protein:
-        protein = options.protein
+    if args.protein:
+        protein = args.protein
 
-    if options.fasta:
-        fasta = options.fasta
+    if args.fasta:
+        fasta = args.fasta
 
-    if options.threshMFO:
-        thresh_mf = options.threshMFO
+    if args.threshMFO:
+        thresh_mf = args.threshMFO
 
-    if options.threshBPO:
-        thresh_bp = options.threshBPO
+    if args.threshBPO:
+        thresh_bp = args.threshBPO
 
-    if options.threshCCO:
-        thresh_cc = options.threshCCO
+    if args.threshCCO:
+        thresh_cc = args.threshCCO
 
     if len(protein)>0:
         print(f'Downloading sequence of {protein} from UniProt')
@@ -211,16 +211,14 @@ def main():
 
     elif len(fasta)>0:
         print(f'Loading the fasta file {fasta}')
-        if(not os.path.isfile(fasta)):
-            print(f'{fasta} file not found')
-            sys.exit()
+        if(not os.path.isfile(fasta)):            
+            sys.exit(f'{fasta} file not found')
 
-    else:
-        print('Please input a protein UniProt ID or path to a fasta file')
-        sys.exit()
+    else:        
+        sys.exit('Please input a protein UniProt ID or path to a fasta file')
 
     try:
-        os.makedirs('temp_data')
+        os.makedirs('temp_data',exist_ok=True)
     except:
         pass
     
@@ -251,6 +249,10 @@ def main():
     
     print(tabulate(mf_df, headers='keys', tablefmt='grid'))
 
+    mf_df['Sub-Ontology'] = 'MF'
+    df_csv = mf_df
+    
+
 
 
     print('==================')
@@ -262,8 +264,11 @@ def main():
             bp_df.append([go_trm, (round(go_preds_bp[go_trm],3)),onto_tree.ont[go_trm]['name']])
     bp_df = pd.DataFrame(bp_df,columns=['GO Term','Confidence','Definition'])
     bp_df = bp_df.sort_values('Confidence',ascending=False).reset_index(drop=True)
-    
+
     print(tabulate(bp_df, headers='keys', tablefmt='grid'))
+
+    bp_df['Sub-Ontology'] = 'BP'
+    df_csv = pd.concat([df_csv,bp_df])
 
     print('===================')
     print('Cellular Components')
@@ -276,6 +281,12 @@ def main():
     cc_df = cc_df.sort_values('Confidence',ascending=False).reset_index(drop=True)
     
     print(tabulate(cc_df, headers='keys', tablefmt='grid'))
+
+    cc_df['Sub-Ontology'] = 'CC'
+    df_csv = pd.concat([df_csv,cc_df])
+
+    if(args.outfile):
+        df_csv.to_csv(path_or_buf=args.outfile, index=False)
 
 
 

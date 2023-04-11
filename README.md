@@ -124,7 +124,7 @@ python3 domaingo_prob.py:
 
 #### Example
 ```
-python domaingo_prob --domain IPR000003 --GO GO:0006355
+python3 domaingo_prob.py --domain IPR000003 --GO GO:0006355
 ```
 <br>
 
@@ -144,7 +144,7 @@ python3 compute_embeddings.py:
 #### Example
 
 ```
-python compute_embeddings.py --protein Q6NYN7 --savefile emb_Q6NYN7.p
+python3 compute_embeddings.py --protein Q6NYN7 --savefile emb_Q6NYN7.p
 ```
 
 ***Note: If you wish to use this representation as feature for some functionally relevant downstream task. <br> Please consider applying proper normalization***
@@ -157,26 +157,27 @@ You can use Domain-PFP to predict the functions by either providing the protein 
 
 ```
 python3 predict_functions.py:
-  -protein              UniProt ID of protein
-  -fasta                Or provide the fasta file path
+  -protein               UniProt ID of protein
+  -fasta                 Or provide the fasta file path
   -threshMFO             Threshold for MFO prediction (default: 0.36)
   -threshBPO             Threshold for BPO prediction (default: 0.31)
   -threshCCO             Threshold for CCO prediction (default: 0.36)
+  -outfile               Path to the output csv file (optional)
   
 ```
 
 #### Example
 
 ```
-python predict_functions.py --protein Q6NYN7
+python3 predict_functions.py --protein Q6NYN7 --outfile Q6NYN7_functions.csv
 ```
 
 ```
-python predict_functions.py --fasta sample_protein/Q6NYN7.fasta
+python3 predict_functions.py --fasta sample_protein/Q6NYN7.fasta --outfile Q6NYN7_functions.csv
 ```
 
 ```
-python predict_functions.py --fasta sample_protein/Q6NYN7.fasta --threshCCO 0.5
+python3 predict_functions.py --fasta sample_protein/Q6NYN7.fasta --threshCCO 0.5 --outfile Q6NYN7_functions.csv
 ```
 
 <br>

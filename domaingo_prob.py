@@ -1,4 +1,4 @@
-from optparse import OptionParser
+from argparse import ArgumentParser
 from tqdm import tqdm
 import pickle
 import torch
@@ -11,13 +11,10 @@ from domaingo_embedding_model import DomainGOEmbeddingModel, load_domaingo_embed
 
 
 
-parser = OptionParser(add_help_option=False)
-
-parser.add_option('--domain',  help=  'input InterPro domain')
-parser.add_option('--GO',  help='input GO term')
-
-
-(options, args) = parser.parse_args()
+parser = ArgumentParser()
+parser.add_argument('--domain', help='input InterPro domain', type=str, required=True)
+parser.add_argument('--GO', help='input GO term', type=str, required=True)
+args = parser.parse_args()
 
 
 def calc_domaingo_prob(domain,GO):
@@ -66,21 +63,19 @@ def main():
     GO = ''
 
     
-    if options.domain:
-        domain = options.domain
+    if args.domain:
+        domain = args.domain
 
-    if options.GO:
-        GO = options.GO
+    if args.GO:
+        GO = args.GO
 
 
 
-    if len(domain)==0:
-        print('Please input a domain')
-        sys.exit()
+    if len(domain)==0:        
+        sys.exit('Please input a domain')
 
-    if len(GO)==0:
-        print('Please input a GO term')
-        sys.exit()
+    if len(GO)==0:        
+        sys.exit('Please input a GO term')
     
     
     calc_domaingo_prob(domain,GO)
