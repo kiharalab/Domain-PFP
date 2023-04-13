@@ -1,0 +1,8 @@
+AUTHOR: DomainpfpBlast
+MODEL: 1
+KEYWORDS: machine learning.
+Species:all
+Ontology	Type	Mode	 | Fmax	Threshold	Coverage
+bpo	NK	full	 | 0.2382709144925126	0.2	0.30660377358490565
+cco	NK	full	 | 0.2986640252935321	0.12	0.3114241001564945
+mfo	NK	full	 | 0.585909823995144	0.34	0.9933920704845814

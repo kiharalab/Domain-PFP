@@ -1,0 +1,6 @@
+AUTHOR: Domainpfp
+MODEL: 1
+KEYWORDS: machine learning.
+Species:all
+Ontology	Type	Mode	 | Fmax	Threshold	Coverage
+mfo	NK	full	 | 0.5616893053853296	0.34	0.9933920704845814
