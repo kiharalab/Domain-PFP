@@ -128,6 +128,10 @@ python3 domaingo_prob.py:
 ```
 python3 domaingo_prob.py --domain IPR000003 --GO GO:0006355
 ```
+
+This usually takes <2 minutes to run.
+
+
 <br>
 
 ### 2. compute functionally aware protein embedding representation
@@ -148,6 +152,8 @@ python3 compute_embeddings.py:
 ```
 python3 compute_embeddings.py --protein Q6NYN7 --savefile emb_Q6NYN7.p
 ```
+
+This usually takes <5 minutes to run, depending on the availability of InterProScan server.
 
 ***Note: If you wish to use this representation as feature for some functionally relevant downstream task. <br> Please consider applying proper normalization***
 
@@ -181,6 +187,8 @@ python3 predict_functions.py --fasta sample_protein/Q6NYN7.fasta --outfile sampl
 ```
 python3 predict_functions.py --fasta sample_protein/Q6NYN7.fasta --threshCCO 0.5 --outfile sample_functions/Q6NYN7_functions.csv
 ```
+
+This usually takes <5 minutes to run, depending on the availability of InterProScan server.
 
 <br>
 
