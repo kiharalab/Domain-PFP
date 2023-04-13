@@ -1,0 +1,22 @@
+GO Term,Confidence,Definition,Sub-Ontology
+GO:0005215,0.867,transporter activity,MF
+GO:0022857,0.866,transmembrane transporter activity,MF
+GO:0015075,0.856,ion transmembrane transporter activity,MF
+GO:0008509,0.851,anion transmembrane transporter activity,MF
+GO:0008514,0.45,organic anion transmembrane transporter activity,MF
+GO:0009987,0.928,cellular process,BP
+GO:0051179,0.679,localization,BP
+GO:0051234,0.675,establishment of localization,BP
+GO:0006810,0.675,transport,BP
+GO:0006811,0.653,ion transport,BP
+GO:0006820,0.647,anion transport,BP
+GO:0055085,0.645,transmembrane transport,BP
+GO:0034220,0.631,ion transmembrane transport,BP
+GO:0098656,0.626,anion transmembrane transport,BP
+GO:0071702,0.602,organic substance transport,BP
+GO:0050896,0.397,response to stimulus,BP
+GO:0015711,0.382,organic anion transport,BP
+GO:0110165,0.998,cellular anatomical entity,CC
+GO:0016020,0.93,membrane,CC
+GO:0071944,0.793,cell periphery,CC
+GO:0005886,0.792,plasma membrane,CC
