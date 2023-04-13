@@ -75,6 +75,8 @@ If you encounter any errors, you can install each library one by one:
 !pip3 install click==8.0.3
 ```
 
+Installing the dependencies only require a few minutes on a standard desktop computer.
+
 #### 3.2 Install with anaconda
 ##### 3.2.1 [`install conda`](). 
 ##### 3.2.2 Install dependency in command line
@@ -169,24 +171,38 @@ python3 predict_functions.py:
 #### Example
 
 ```
-python3 predict_functions.py --protein Q6NYN7 --outfile Q6NYN7_functions.csv
+python3 predict_functions.py --protein Q6NYN7 --outfile sample_functions/Q6NYN7_functions.csv
 ```
 
 ```
-python3 predict_functions.py --fasta sample_protein/Q6NYN7.fasta --outfile Q6NYN7_functions.csv
+python3 predict_functions.py --fasta sample_protein/Q6NYN7.fasta --outfile sample_functions/Q6NYN7_functions.csv
 ```
 
 ```
-python3 predict_functions.py --fasta sample_protein/Q6NYN7.fasta --threshCCO 0.5 --outfile Q6NYN7_functions.csv
+python3 predict_functions.py --fasta sample_protein/Q6NYN7.fasta --threshCCO 0.5 --outfile sample_functions/Q6NYN7_functions.csv
 ```
 
 <br>
 
-## Experiments
+## Experiments and Reproducibility 
 
-All the codes to run the experiments are provided in /Experiments directory
+All the codes to run the experiments presented in the paper, are provided in the `/Experiments` directory
+
+
+
+
+## Example
+
+### Input File
+Protein sequence in fasta format.
+Our example input can be found in the `sample_protein` directory
+
+### Output File 
+Predcited functions for the protein in csv format.
+Our example output can be found in the `sample_functions` directory
 
 
 ## Citation:
 
-"Domain-PFP: Protein Function Prediction Using Function-Aware Domain Embedding Representations, Nabil Ibtehaz, Yuki Kagaya, and Daisuke Kihara, In submission (2023)"
+
+>"Domain-PFP: Protein Function Prediction Using Function-Aware Domain Embedding Representations, Nabil Ibtehaz, Yuki Kagaya, and Daisuke Kihara, In submission (2023)"
