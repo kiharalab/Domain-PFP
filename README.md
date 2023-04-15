@@ -106,6 +106,20 @@ unzip saved_models.zip
 
 ```
 
+## Source Codes
+
+Our implementation of Domain-PFP is provided in the `DomainPFP` directory.
+
+## Experiments and Reproducibility 
+
+All the codes to run the experiments presented in the paper, are provided in the `/experiments` directory.
+
+
+## Benchmark Results
+
+The result files of CAFA3 and PROBE benchmarks, generated using the official evaluation tool, are provided in the `/results` directory.
+
+
 ## Usage
 
 
@@ -191,12 +205,6 @@ python3 predict_functions.py --fasta sample_protein/Q6NYN7.fasta --threshCCO 0.5
 This usually takes <5 minutes to run, depending on the availability of InterProScan server.
 
 <br>
-
-## Experiments and Reproducibility 
-
-All the codes to run the experiments presented in the paper, are provided in the `/Experiments` directory
-
-
 
 
 ## Example
