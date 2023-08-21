@@ -94,7 +94,7 @@ conda deactivate    (If you want to exit)
 ```
 
 ## Prepare Data
-Please download and unzip the data.zip and saved_models.zip files
+Please download and unzip the data.zip and saved_models.zip files. Optinally, you may download our blast and ppi database if you wish to use blast or ppi in your prediction.
 
 [https://kiharalab.org/domainpfp/](https://kiharalab.org/domainpfp/)
 
@@ -103,7 +103,8 @@ wget https://kiharalab.org/domainpfp/data.zip
 unzip data.zip
 wget https://kiharalab.org/domainpfp/saved_models.zip
 unzip saved_models.zip
-
+wget https://kiharalab.org/domainpfp/blast_ppi_database.zip
+unzip blast_ppi_database.zip
 ```
 
 ## Source Codes
