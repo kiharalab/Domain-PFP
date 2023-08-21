@@ -21,8 +21,8 @@ parser.add_argument('--fasta',  help='Fasta file of protein sequence', type=str)
 parser.add_argument('--threshMFO', help='Threshold value for MF prediction', default=.36, type=float)
 parser.add_argument('--threshBPO', help='Threshold value for BP prediction', default=.31, type=float)
 parser.add_argument('--threshCCO', help='Threshold value for CC prediction', default=.36, type=float)
-parser.add_argument('--blast', help='Use Blast information to predict functions. (DiamondBlast must be installed with path information)', default=False, type=bool, action="store_true")
-parser.add_argument('--ppi', help='Use PPI information to predict functions. (Only works when a uniprot ID or properly formatted fasta file is provided)', default=False, type=bool, action="store_true")
+parser.add_argument('--blast_flag', help='Use Blast information to predict functions. (DiamondBlast must be installed with path information)',  action="store_true")
+parser.add_argument('--ppi_flag', help='Use PPI information to predict functions. (Only works when a uniprot ID or properly formatted fasta file is provided)', action="store_true")
 parser.add_argument('--outfile',  help='Path to the output csv file (optional)', type=str)
 
 args = parser.parse_args()
@@ -318,7 +318,7 @@ def merge_predictions(preds1, preds2, preds3):
 
         preds[go_trm] = scr
 
-
+    return preds
 
 def predict_functions(mf_embedding, bp_embedding, cc_embedding):
     """
@@ -389,8 +389,8 @@ def main():
     thresh_mf = .36
     thresh_bp = .31
     thresh_cc = .36
-    blast_flg = False
-    ppi_flg = False
+    blast_flag = False
+    ppi_flag = False
 
     onto_tree = Ontology(f'data/go.obo', with_rels=False) 
     
@@ -408,6 +408,12 @@ def main():
 
     if args.threshCCO:
         thresh_cc = args.threshCCO
+
+    if args.blast_flag:
+        blast_flag = True
+    
+    if args.ppi_flag:
+        ppi_flag = True
 
     if len(protein)>0:
         print(f'Downloading sequence of {protein} from UniProt')
@@ -436,7 +442,7 @@ def main():
     bp_ppi = {}
     cc_ppi = {}
 
-    if(ppi_flg):
+    if(ppi_flag):
         print('Extracting PPI Information')
         mf_ppi, bp_ppi, cc_ppi = compute_ppi_functions(fasta)
 
@@ -444,10 +450,14 @@ def main():
     bp_dmnd = {}
     cc_dmnd = {}
 
-    if(blst_flg):
+    if(blast_flag):
         print('Computing Dimaond BLAST')
         try:
             import google.colab             # checking if running in colab
+            os.system(f'/content/Domain-PFP/diamond blastp --more-sensitive -d blast_ppi_database/mf_train_data.dmnd -q {fasta} --outfmt 6 qseqid sseqid bitscore pident > temp_data/mf_diamond.res')
+            os.system(f'/content/Domain-PFP/diamond blastp --more-sensitive -d blast_ppi_database/bp_train_data.dmnd -q {fasta} --outfmt 6 qseqid sseqid bitscore pident > temp_data/bp_diamond.res')
+            os.system(f'/content/Domain-PFP/diamond blastp --more-sensitive -d blast_ppi_database/cc_train_data.dmnd -q {fasta} --outfmt 6 qseqid sseqid bitscore pident > temp_data/cc_diamond.res')
+        
         except:
             os.system(f'diamond blastp --more-sensitive -d blast_ppi_database/mf_train_data.dmnd -q {fasta} --outfmt 6 qseqid sseqid bitscore pident > temp_data/mf_diamond.res')
             os.system(f'diamond blastp --more-sensitive -d blast_ppi_database/bp_train_data.dmnd -q {fasta} --outfmt 6 qseqid sseqid bitscore pident > temp_data/bp_diamond.res')
