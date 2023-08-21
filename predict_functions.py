@@ -21,6 +21,8 @@ parser.add_argument('--fasta',  help='Fasta file of protein sequence', type=str)
 parser.add_argument('--threshMFO', help='Threshold value for MF prediction', default=.36, type=float)
 parser.add_argument('--threshBPO', help='Threshold value for BP prediction', default=.31, type=float)
 parser.add_argument('--threshCCO', help='Threshold value for CC prediction', default=.36, type=float)
+parser.add_argument('--blast', help='Use Blast information to predict functions. (DiamondBlast must be installed with path information)', default=False, type=bool, action="store_true")
+parser.add_argument('--ppi', help='Use PPI information to predict functions. (Only works when a uniprot ID or properly formatted fasta file is provided)', default=False, type=bool, action="store_true")
 parser.add_argument('--outfile',  help='Path to the output csv file (optional)', type=str)
 
 args = parser.parse_args()
@@ -113,6 +115,211 @@ def compute_embeddings(domains):
     return mf_embedding, bp_embedding, cc_embedding
 
 
+def compute_ppi_functions(fsta_fl):
+
+    fp = open(fsta_fl)
+    prtn_id = fp.read().split('\n')[0].split('|')[1]
+    fp.close()
+
+
+    mf_data = pickle.load(open('./blast_ppi_database/mf_train_data.pkl','rb'))
+    bp_data = pickle.load(open('./blast_ppi_database/bp_train_data.pkl','rb'))
+    cc_data = pickle.load(open('./blast_ppi_database/cc_train_data.pkl','rb'))
+
+    mf_data = mf_data[['proteins','prop_annotations']].values
+    mf_terms = {}
+
+    for i in range(len(mf_data)):
+        mf_terms[mf_data[i][0]] = mf_data[i][1]
+
+    bp_data = bp_data[['proteins','prop_annotations']].values
+    bp_terms = {}
+
+    for i in range(len(bp_data)):
+        bp_terms[bp_data[i][0]] = bp_data[i][1]
+
+
+    cc_data = cc_data[['proteins','prop_annotations']].values
+    cc_terms = {}
+
+    for i in range(len(cc_data)):
+        cc_terms[cc_data[i][0]] = cc_data[i][1]
+
+    ppi_hits = {}
+    mf_totscore = 0
+    bp_totscore = 0
+    cc_totscore = 0
+
+    mf_preds = {}
+    bp_preds = {}
+    cc_preds = {}
+
+    fp = open('./blast_ppi_database/ppi_scores.tsv','r')
+    ppi_dt = fp.read().split('\n')[:-1]
+    fp.close()
+
+    for ln in ppi_dt:
+        prtn1, prtn2, scr = ln.split('\t')
+        
+        scr = float(scr)
+
+        if (prtn1 == prtn_id):
+            
+            if prtn2 in mf_terms:
+                mf_totscore += scr
+                
+                for go_trm in mf_terms[prtn2]:
+                    if go_trm not in mf_preds:
+                        mf_preds[go_trm] = 0
+                    mf_preds[go_trm] += scr
+
+
+            if prtn2 in bp_terms:
+                bp_totscore += scr
+
+                for go_trm in bp_terms[prtn2]:
+                    if go_trm not in bp_preds:
+                        bp_preds[go_trm] = 0
+                    bp_preds[go_trm] += scr
+
+            if prtn2 in cc_terms:
+                cc_totscore += scr
+                
+                for go_trm in cc_terms[prtn2]:
+                    if go_trm not in cc_preds:
+                        cc_preds[go_trm] = 0
+                    cc_preds[go_trm] += scr
+
+    for go_trm in mf_preds:
+        mf_preds[go_trm] /= mf_totscore
+
+    for go_trm in bp_preds:
+        bp_preds[go_trm] /= bp_totscore
+
+    for go_trm in cc_preds:
+        cc_preds[go_trm] /= cc_totscore
+            
+    return mf_preds, bp_preds, cc_preds
+
+
+def compute_blast_functions():
+
+
+    mf_data = pickle.load(open('./blast_ppi_database/mf_train_data.pkl','rb'))
+    bp_data = pickle.load(open('./blast_ppi_database/bp_train_data.pkl','rb'))
+    cc_data = pickle.load(open('./blast_ppi_database/cc_train_data.pkl','rb'))
+
+    mf_data = mf_data[['proteins','prop_annotations']].values
+    mf_terms = {}
+
+    for i in range(len(mf_data)):
+        mf_terms[mf_data[i][0]] = mf_data[i][1]
+
+    bp_data = bp_data[['proteins','prop_annotations']].values
+    bp_terms = {}
+
+    for i in range(len(bp_data)):
+        bp_terms[bp_data[i][0]] = bp_data[i][1]
+
+
+    cc_data = cc_data[['proteins','prop_annotations']].values
+    cc_terms = {}
+
+    for i in range(len(cc_data)):
+        cc_terms[cc_data[i][0]] = cc_data[i][1]
+
+    with open('temp_data/mf_diamond.res') as fp:
+        mf_hits = fp.read().split('\n')[:-1]
+    with open('temp_data/bp_diamond.res') as fp:
+        bp_hits = fp.read().split('\n')[:-1]
+    with open('temp_data/cc_diamond.res') as fp:
+        cc_hits = fp.read().split('\n')[:-1]
+    
+    mf_totscore = 0
+    bp_totscore = 0
+    cc_totscore = 0
+
+    mf_preds = {}
+    bp_preds = {}
+    cc_preds = {}
+
+
+    for ln in mf_hits:
+        _, prtn2, scr, _ = ln.split('\t')        
+        scr = float(scr)
+            
+        if prtn2 in mf_terms:
+            mf_totscore += scr
+            
+            for go_trm in mf_terms[prtn2]:
+                if go_trm not in mf_preds:
+                    mf_preds[go_trm] = 0
+                mf_preds[go_trm] += scr
+
+
+    for ln in bp_hits:
+        _, prtn2, scr, _ = ln.split('\t')        
+        scr = float(scr)
+
+        if prtn2 in bp_terms:
+            bp_totscore += scr
+
+            for go_trm in bp_terms[prtn2]:
+                if go_trm not in bp_preds:
+                    bp_preds[go_trm] = 0
+                bp_preds[go_trm] += scr
+
+
+    for ln in cc_hits:
+        _, prtn2, scr, _ = ln.split('\t')
+        scr = float(scr)
+
+        if prtn2 in cc_terms:
+            cc_totscore += scr
+            
+            for go_trm in cc_terms[prtn2]:
+                if go_trm not in cc_preds:
+                    cc_preds[go_trm] = 0
+                cc_preds[go_trm] += scr
+
+    for go_trm in mf_preds:
+        mf_preds[go_trm] /= mf_totscore
+
+    for go_trm in bp_preds:
+        bp_preds[go_trm] /= bp_totscore
+
+    for go_trm in cc_preds:
+        cc_preds[go_trm] /= cc_totscore
+            
+    return mf_preds, bp_preds, cc_preds
+
+def merge_predictions(preds1, preds2, preds3):
+
+    preds = {}
+    cnt = 1
+    if(len(preds2)>0):
+        cnt += 1
+    if(len(preds3)>0):
+        cnt += 1
+
+    go_trms_all = set(preds1.keys()).union(set(preds2.keys())).union(set(preds3.keys()))
+
+    for go_trm in go_trms_all:
+
+        scr = 0
+        if go_trm in preds1:
+            scr += preds1[go_trm]
+        if go_trm in preds2:
+            scr += preds2[go_trm]
+        if go_trm in preds3:
+            scr += preds3[go_trm]
+
+        scr /= cnt
+
+        preds[go_trm] = scr
+
+
+
 def predict_functions(mf_embedding, bp_embedding, cc_embedding):
     """
     Predict functions of the protein using KNN
@@ -182,6 +389,8 @@ def main():
     thresh_mf = .36
     thresh_bp = .31
     thresh_cc = .36
+    blast_flg = False
+    ppi_flg = False
 
     onto_tree = Ontology(f'data/go.obo', with_rels=False) 
     
@@ -222,7 +431,30 @@ def main():
     except:
         pass
     
-    
+
+    mf_ppi = {}
+    bp_ppi = {}
+    cc_ppi = {}
+
+    if(ppi_flg):
+        print('Extracting PPI Information')
+        mf_ppi, bp_ppi, cc_ppi = compute_ppi_functions(fasta)
+
+    mf_dmnd = {}
+    bp_dmnd = {}
+    cc_dmnd = {}
+
+    if(blst_flg):
+        print('Computing Dimaond BLAST')
+        try:
+            import google.colab             # checking if running in colab
+        except:
+            os.system(f'diamond blastp --more-sensitive -d blast_ppi_database/mf_train_data.dmnd -q {fasta} --outfmt 6 qseqid sseqid bitscore pident > temp_data/mf_diamond.res')
+            os.system(f'diamond blastp --more-sensitive -d blast_ppi_database/bp_train_data.dmnd -q {fasta} --outfmt 6 qseqid sseqid bitscore pident > temp_data/bp_diamond.res')
+            os.system(f'diamond blastp --more-sensitive -d blast_ppi_database/cc_train_data.dmnd -q {fasta} --outfmt 6 qseqid sseqid bitscore pident > temp_data/cc_diamond.res')
+
+        mf_dmnd, bp_dmnd, cc_dmnd = compute_blast_functions()
+
     job_id = datetime.now().strftime("%H%M%S%f")
 
     print('Extracting protein domains using InterPro Scan')
@@ -235,6 +467,10 @@ def main():
 
     print("Predicting Functions")
     go_preds_mf, go_preds_bp, go_preds_cc = predict_functions(mf_embedding, bp_embedding, cc_embedding)
+
+    go_preds_mf = merge_predictions(go_preds_mf, mf_dmnd, mf_ppi)
+    go_preds_bp = merge_predictions(go_preds_bp, bp_dmnd, bp_ppi)
+    go_preds_cc = merge_predictions(go_preds_cc, cc_dmnd, cc_ppi)
 
     print('===================')
     print('Molecular Functions')
