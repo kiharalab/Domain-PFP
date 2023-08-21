@@ -23,6 +23,9 @@ Contact: Daisuke Kihara (dkihara@purdue.edu)
 
 For technical problems or questions, please reach to Nabil Ibtehaz (nibtehaz@purdue.edu).
 
+## Online Platform (run easily and freely on Google Colab)
+
+[https://bit.ly/domain-pfp-colab](https://bit.ly/domain-pfp-colab)
 
 ## Introduction
 Domains are functional and structural units of proteins that govern various biological functions performed by the proteins. Therefore, characterization of domains in a protein can serve as a proper functional representation of proteins. Here, we employ a self-supervised protocol to derive functionally consistent representations for domains, through learning domain-Gene Ontology (GO) co-occurrences and associations. Domain embeddings constructed with the self-supervised protocol learned functional associations, which turned out effective to perform in actual function prediction tasks. An extensive evaluation shows that the protein representation using the domain embeddings are superior to that of large-scale protein language models in GO prediction tasks. Moreover, the new function prediction method, Domain-PFP, significantly outperformed the state-of-the-art function predictors. Notably, Domain-PFP achieved increase of area under precision-recall curve by 2.43%, 14.58% and 9.57% over the state-of-the-art method for molecular function (MF), biological process (BP) and cellular components (CC), respectively. Moreover, Domain-PFP demonstrated competitive performance in CAFA3 evaluation, by achieving overall the best performance among top teams that participated in the assessment.
@@ -94,7 +97,7 @@ conda deactivate    (If you want to exit)
 ```
 
 ## Prepare Data
-Please download and unzip the data.zip and saved_models.zip files. Optinally, you may download our blast and ppi database if you wish to use blast or ppi in your prediction.
+Please download and unzip the data.zip and saved_models.zip files. Optinally, you may download our blast and ppi database (blast_ppi_database.zip) if you wish to use blast or ppi in your prediction.
 
 [https://kiharalab.org/domainpfp/](https://kiharalab.org/domainpfp/)
 
@@ -180,12 +183,16 @@ You can use Domain-PFP to predict the functions by either providing the protein 
 
 ```
 python3 predict_functions.py:
-  -protein               UniProt ID of protein
-  -fasta                 Or provide the fasta file path
-  -threshMFO             Threshold for MFO prediction (default: 0.36)
-  -threshBPO             Threshold for BPO prediction (default: 0.31)
-  -threshCCO             Threshold for CCO prediction (default: 0.36)
-  -outfile               Path to the output csv file (optional)
+  --protein               UniProt ID of protein
+  --fasta                 Or provide the fasta file path
+  --threshMFO             Threshold for MFO prediction (default: 0.36)
+  --threshBPO             Threshold for BPO prediction (default: 0.31)
+  --threshCCO             Threshold for CCO prediction (default: 0.36)
+  --blast_flag            Optional flag to use DiamondBlast for function prediction
+                          (DiamondBlast needs to be installed and assigned to path)
+  --ppi_flag              Optional flag to use String PPI for function prediction
+                          (Only works for Uniprot IDs or properly formatted fastas)
+  --outfile               Path to the output csv file (optional)
   
 ```
 
@@ -203,8 +210,14 @@ python3 predict_functions.py --fasta sample_protein/Q6NYN7.fasta --outfile sampl
 python3 predict_functions.py --fasta sample_protein/Q6NYN7.fasta --threshCCO 0.5 --outfile sample_functions/Q6NYN7_functions.csv
 ```
 
+```
+python3 predict_functions.py --fasta sample_protein/Q6NYN7.fasta --threshCCO 0.5 --outfile sample_functions/Q6NYN7_functions.csv --blast_flag --ppi_flag
+```
+
+
 This usually takes <5 minutes to run, depending on the availability of InterProScan server.
 
+(Note: we recommend using our google colab release [https://bit.ly/domain-pfp-colab](https://bit.ly/domain-pfp-colab) to avoid issues with DiamondBlast installation)
 <br>
 
 
