@@ -22,6 +22,7 @@ parser.add_argument('--threshMFO', help='Threshold value for MF prediction', def
 parser.add_argument('--threshBPO', help='Threshold value for BP prediction', default=.31, type=float)
 parser.add_argument('--threshCCO', help='Threshold value for CC prediction', default=.36, type=float)
 parser.add_argument('--blast_flag', help='Use Blast information to predict functions. (DiamondBlast must be installed with path information)',  action="store_true")
+parser.add_argument('--diamond_path', help='Path to Diamond Blast (by default the colab release path is provided)',  default='/content/Domain-PFP/diamond', type=str)
 parser.add_argument('--ppi_flag', help='Use PPI information to predict functions. (Only works when a uniprot ID or properly formatted fasta file is provided)', action="store_true")
 parser.add_argument('--outfile',  help='Path to the output csv file (optional)', type=str)
 
@@ -390,6 +391,7 @@ def main():
     thresh_bp = .31
     thresh_cc = .36
     blast_flag = False
+    diamond_path = '/content/Domain-PFP/diamond'
     ppi_flag = False
 
     onto_tree = Ontology(f'data/go.obo', with_rels=False) 
@@ -411,6 +413,9 @@ def main():
 
     if args.blast_flag:
         blast_flag = True
+
+    if args.diamond_path:
+        diamond_path = args.diamond_path
     
     if args.ppi_flag:
         ppi_flag = True
@@ -452,17 +457,10 @@ def main():
 
     if(blast_flag):
         print('Computing Dimaond BLAST')
-        try:
-            import google.colab             # checking if running in colab
-            os.system(f'/content/Domain-PFP/diamond blastp --more-sensitive -d blast_ppi_database/mf_train_data.dmnd -q {fasta} --outfmt 6 qseqid sseqid bitscore pident > temp_data/mf_diamond.res')
-            os.system(f'/content/Domain-PFP/diamond blastp --more-sensitive -d blast_ppi_database/bp_train_data.dmnd -q {fasta} --outfmt 6 qseqid sseqid bitscore pident > temp_data/bp_diamond.res')
-            os.system(f'/content/Domain-PFP/diamond blastp --more-sensitive -d blast_ppi_database/cc_train_data.dmnd -q {fasta} --outfmt 6 qseqid sseqid bitscore pident > temp_data/cc_diamond.res')
-        
-        except:
-            os.system(f'diamond blastp --more-sensitive -d blast_ppi_database/mf_train_data.dmnd -q {fasta} --outfmt 6 qseqid sseqid bitscore pident > temp_data/mf_diamond.res')
-            os.system(f'diamond blastp --more-sensitive -d blast_ppi_database/bp_train_data.dmnd -q {fasta} --outfmt 6 qseqid sseqid bitscore pident > temp_data/bp_diamond.res')
-            os.system(f'diamond blastp --more-sensitive -d blast_ppi_database/cc_train_data.dmnd -q {fasta} --outfmt 6 qseqid sseqid bitscore pident > temp_data/cc_diamond.res')
-
+        os.system(f'{diamond_path} blastp --more-sensitive -d blast_ppi_database/mf_train_data.dmnd -q {fasta} --outfmt 6 qseqid sseqid bitscore pident > temp_data/mf_diamond.res')
+        os.system(f'{diamond_path} blastp --more-sensitive -d blast_ppi_database/bp_train_data.dmnd -q {fasta} --outfmt 6 qseqid sseqid bitscore pident > temp_data/bp_diamond.res')
+        os.system(f'{diamond_path} blastp --more-sensitive -d blast_ppi_database/cc_train_data.dmnd -q {fasta} --outfmt 6 qseqid sseqid bitscore pident > temp_data/cc_diamond.res')    
+    
         mf_dmnd, bp_dmnd, cc_dmnd = compute_blast_functions()
 
     job_id = datetime.now().strftime("%H%M%S%f")

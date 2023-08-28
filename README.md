@@ -190,6 +190,8 @@ python3 predict_functions.py:
   --threshCCO             Threshold for CCO prediction (default: 0.36)
   --blast_flag            Optional flag to use DiamondBlast for function prediction
                           (DiamondBlast needs to be installed and assigned to path)
+  --diamond_path          Path to Diamond Blast (by default the colab release path is provided)
+                          (default='/content/Domain-PFP/diamond')
   --ppi_flag              Optional flag to use String PPI for function prediction
                           (Only works for Uniprot IDs or properly formatted fastas)
   --outfile               Path to the output csv file (optional)
