@@ -23,6 +23,12 @@ Contact: Daisuke Kihara (dkihara@purdue.edu)
 
 For technical problems or questions, please reach to Nabil Ibtehaz (nibtehaz@purdue.edu).
 
+## Citation:
+
+>Ibtehaz, N., Kagaya, Y. & Kihara, D. Domain-PFP allows protein function prediction using function-aware domain embedding representations. *Commun Biol* **6**, 1103 (2023). [https://doi.org/10.1038/s42003-023-05476-9](https://doi.org/10.1038/s42003-023-05476-9)
+
+
+
 ## Online Platform (run easily and freely on Google Colab)
 
 [https://bit.ly/domain-pfp-colab](https://bit.ly/domain-pfp-colab)
@@ -234,7 +240,4 @@ Predcited functions for the protein in csv format.
 Our example output can be found in the `sample_functions` directory
 
 
-## Citation:
 
-
->"Domain-PFP: Protein Function Prediction Using Function-Aware Domain Embedding Representations, Nabil Ibtehaz, Yuki Kagaya, and Daisuke Kihara, In submission (2023)"
